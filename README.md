@@ -5,7 +5,7 @@ This project implements an end-to-end system to model and authenticate users bas
 
 ---
 
-## 🧠 High-Level Pipeline Overview
+##  High-Level Pipeline Overview
 
 1. **Preprocessing**
    - File: `mouse_preprocessor.ipynb`
@@ -21,7 +21,26 @@ This project implements an end-to-end system to model and authenticate users bas
 
 ---
 
-## 📁 Module Details
+## File Structure
+gmail-biometrics-capstone/
+│
+├── data/
+│   ├── mouse/                      # Raw mouse data per user (CSV format)
+│   └── data_splits/               # Processed .npy sequences after preprocessing
+│
+├── models/                        # Trained BiLSTM models (saved as .keras)
+│
+├── src/                           # Jupyter notebooks for core logic
+│   ├── mouse_preprocessor.ipynb       # Data preprocessing: segmentation and padding
+│   ├── binary_biLSTM.ipynb            # Model training: per-user binary BiLSTM
+│   └── test_binary_LSTM.ipynb         # Evaluation: ROC, AUC, EER, confusion matrix
+│
+├── README.md                      # Project overview, setup, and structure
+├── requirements.txt               # List of required Python packages
+└── LICENSE                        # Project license file
+
+
+##  Module Details
 
 ### 1️⃣ `mouse_preprocessor.ipynb`
 
@@ -78,7 +97,7 @@ Evaluate trained `.keras` models per user and generate metrics.
 
 ---
 
-## 📊 Output
+##  Output
 
 | File/Folder                    | Description                                  |
 |-------------------------------|----------------------------------------------|
@@ -88,6 +107,6 @@ Evaluate trained `.keras` models per user and generate metrics.
 
 ---
 
-## ✅ Summary
+##  Summary
 
 This repository implements a fully functional mouse dynamics authentication system using deep learning. The code is modular, well-commented, and includes robust training and evaluation components. Ideal for behavioral biometrics research and practical authentication systems.
