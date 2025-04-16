@@ -99,17 +99,19 @@ This repository implements a fully functional mouse dynamics authentication syst
 gmail-biometrics-capstone/
 │
 ├── data/
-│   ├── mouse/                      # Raw mouse data per user (CSV format)
-│   └── data_splits/               # Processed .npy sequences after preprocessing
+│   ├── mouse/                         # Raw mouse data per user (CSV format)
+│   └── data_splits/                  # Processed .npy sequences after preprocessing
 │
-├── models/                        # Trained BiLSTM models (saved as .keras)
+├── models/                           # Directory to store trained BiLSTM models
+│   ├── models_BiLSTM_Oversampling/   # Models trained using oversampled error cases (train_binary_over)
+│   └── models_BiLSTM_Synth/          # Models trained using synthetic augmented data (train_binary_synth)
 │
-├── src/                           # Jupyter notebooks for core logic
-│   ├── mouse_preprocessor.ipynb       # Data preprocessing: segmentation and padding
-│   ├── binary_biLSTM.ipynb            # Model training: per-user binary BiLSTM
-│   └── test_binary_LSTM.ipynb         # Evaluation: ROC, AUC, EER, confusion matrix
+├── src/                              # Jupyter notebooks for core logic
+│   ├── mouse_preprocessor.ipynb          # Data preprocessing: segmentation and padding
+│   ├── binary_biLSTM.ipynb               # Model training: per-user binary BiLSTM (real + synth)
+│   └── test_binary_LSTM.ipynb            # Evaluation: ROC, AUC, EER, confusion matrix
 │
-├── README.md                      # Project overview, setup, and structure
-├── requirements.txt               # List of required Python packages
-└── LICENSE                        # Project license file
+├── README.md                         # Project overview, setup, and structure
+├── requirements.txt                  # List of required Python packages
+└── LICENSE                           # Project license file
 ```
