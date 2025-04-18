@@ -3,23 +3,6 @@
 
 This project implements an end-to-end system to model and authenticate users based on their mouse movement dynamics using LSTM and BiLSTM models. It is structured into three main stages: **Preprocessing**, **Training**, and **Evaluation**.
 
----
-
-##  High-Level Pipeline Overview
-
-1. **Preprocessing**
-   - File: `mouse_preprocessor.ipynb`
-   - Purpose: Convert raw mouse session data into segmented, padded sequences suitable for LSTM input.
-
-2. **Training**
-   - File: `binary_biLSTM.ipynb` or `train_binary_synth()`
-   - Purpose: Train user-specific binary classifiers using BiLSTM to distinguish genuine users from imposters.
-
-3. **Evaluation**
-   - File: `test_binary_LSTM.ipynb`
-   - Purpose: Evaluate each trained model using AUC, EER, and confusion matrix by grouping predictions.
-
----
 
 ##  Module Details
 
@@ -89,24 +72,13 @@ Evaluate trained `.keras` models per user and generate metrics.
 - `EER`: Equal Error Rate
 - `Confusion Matrix`: Visual performance breakdown
 
----
-
-##  Output
-
-| File/Folder                    | Description                                  |
-|-------------------------------|----------------------------------------------|
-| `Gmail Data Splits/`          | Processed `.npy` sequence files per user     |
-| `Gmail Models/`               | Trained `.keras` models per user             |
-| `binary_results.csv`          | Evaluation metrics from `binary_test()`      |
-
----
 
 ##  Summary
 
 This repository implements a fully functional mouse dynamics authentication system using deep learning. The code is modular, well-commented, and includes robust training and evaluation components. Ideal for behavioral biometrics research and practical authentication systems.
 
 
-##  Project Structure
+##  Project Folder Structure
 
 ```
 gmail-biometrics-capstone/
