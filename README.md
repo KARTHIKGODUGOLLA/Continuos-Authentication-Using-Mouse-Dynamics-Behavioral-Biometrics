@@ -3,6 +3,27 @@
 
 This project implements an end-to-end system to model and authenticate users based on their mouse movement dynamics using LSTM and BiLSTM models. It is structured into three main stages: **Preprocessing**, **Training**, and **Evaluation**.
 
+## How to Run This Project
+
+1. **Install dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Prepare raw data**  
+   Place user mouse session CSVs in `data/mouse/`.
+
+3. **Preprocess data**  
+   Run `mouse_preprocessor.ipynb` to generate `.npy` sequences in `data/data_splits/`.
+
+4. **Train models**  
+   Use `binary_biLSTM.ipynb` to train models using one of:
+   - `train_binary()`
+   - `train_binary_over()`
+   - `train_binary_synth()`
+
+5. **Evaluate**  
+   Run `test_binary_LSTM.ipynb` to evaluate trained models with AUC, EER, and confusion matrices.
 
 ##  Module Details
 
