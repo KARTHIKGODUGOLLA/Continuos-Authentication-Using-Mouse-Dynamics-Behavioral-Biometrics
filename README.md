@@ -50,11 +50,24 @@ Train one binary classifier per user to distinguish their mouse behavior from th
 - Combine all other users’ data as negative class (imposters).
 - Build and compile a `BiLSTM` model using `Keras`.
 
-**Key Variables:**
+**Key Functions:**
+***Standard Training***
+- Function: `train_binary()`
+- Trains the model using 80/20 split of genuine and imposter sequences.
+- Uses early stopping and validation AUC to save the best-performing model.
+***Oversampling Training***
+- Function: `train_binary_over()`
+- After each training round, misclassified sequences (false positives/negatives) are added back to the training set.
+- Useful in this project to emphasize borderline cases by oversampling misclassified sequences, helping the model learn subtle distinctions between genuine and imposter behavior.
+
+***Synthetic Augmentation Training***
+- Function: `train_binary_synth()`
+- Calls `synthetic_interp()` to generate realistic augmented sequences by perturbing mouse movement deltas at turning points.
+-  helpful in this project where genuine samples are heavily outnumbered by imposter samples from all other users.
+
 - `gen_train_X`, `imp_train_X`: Genuine and imposter sequences
-- `train_binary()` or `train_binary_synth()`: Main training loop
-  - Supports oversampling of hard negatives or synthetic generation
 - `model.fit(...)`: Trains the model and tracks validation AUC
+
 
 **Model Architecture:**
 - `Masking → BiLSTM(128) → BatchNorm → Dropout → BiLSTM(128) → Dense(1, sigmoid)`
