@@ -124,6 +124,6 @@ gmail-biometrics-capstone/
 
 ##  Authors
 - Karthik Godugolla(Student)
-- Daqing Houe (Faculty Adviser)
+- Daqing Hou (Faculty Adviser)
 
 
