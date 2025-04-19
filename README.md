@@ -121,3 +121,9 @@ gmail-biometrics-capstone/
 ├── requirements.txt                  # List of required Python packages
 └── LICENSE                           # Project license file
 ```
+
+##  Authors
+-Karthik Godugolla(Student)
+-Daqing Houe (Faculty Adviser)
+
+
