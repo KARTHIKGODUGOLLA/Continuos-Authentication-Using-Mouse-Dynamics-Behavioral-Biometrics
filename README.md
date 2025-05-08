@@ -3,6 +3,57 @@
 
 This project implements an end-to-end system to model and authenticate users based on their mouse movement dynamics using LSTM and BiLSTM models. It is structured into three main stages: **Preprocessing**, **Training**, and **Evaluation**.
 
+
+## 🚀 Usage Instructions
+
+### 1. Preprocess Raw Data
+Generate `.npy` sequences from raw CSV mouse data:
+```bash
+python Mouse\ Dynamics\ Behavioral\ Biometrics-Capstone/src/mouse_preprocessor.py
+```
+
+### 2. Train BiLSTM Models (Synthetic Augmentation)
+```bash
+python Mouse\ Dynamics\ Behavioral\ Biometrics-Capstone/src/binary_biLSTM.py
+```
+
+### 3. Evaluate Trained Models
+```bash
+python Mouse\ Dynamics\ Behavioral\ Biometrics-Capstone/src/test_binary_LSTM.py
+```
+
+Update the file paths in the code or commands if your data is stored elsewhere.
+
+---
+
+## 🛠️ Installation
+
+Clone the repository and install required dependencies:
+
+```bash
+git clone https://github.com/KARTHIKGODUGOLLA/Continuos-Authentication-Using-Mouse-Dynamics-Behavioral-Biometrics.git
+cd Continuos-Authentication-Using-Mouse-Dynamics-Behavioral-Biometrics
+pip install -r requirements.txt
+```
+
+Make sure Python 3.8+ is installed. Recommended to use a virtual environment.
+
+---
+
+## 📂 Dataset Information
+
+This project uses mouse movement data collected per user in `.csv` format, stored under:
+
+```
+data/mouse/               # Raw input
+data/data_splits/         # Processed .npy sequences
+```
+
+If you're using your own data:
+1. Place CSVs (one per user) in `data/mouse/`
+2. Run `mouse_preprocessor.py` to generate `.npy` sequences in `data/data_splits/`
+
+*The original dataset is not completely publicly shared due to privacy. If you would like a sample or wish to replicate, please contact the author or simulate synthetic mouse movement data.*
 ## How to Run This Project
 
 1. **Install dependencies**  
@@ -102,7 +153,7 @@ This repository implements a fully functional mouse dynamics authentication syst
 ##  Project Folder Structure
 
 ```
-gmail-biometrics-capstone/
+Mouse Dynamics Behavioral Biometrics-Capstone/
 │
 ├── data/
 │   ├── mouse/                         # Raw mouse data per user (CSV format)
