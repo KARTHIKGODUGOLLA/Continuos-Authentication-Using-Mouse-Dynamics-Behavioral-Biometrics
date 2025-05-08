@@ -421,5 +421,5 @@ def train_binary_synth(data_path, out_path):
 
 
 #replace the first argument path with the .npy sequences generated from the mouse_preprocessor file(stored in the folder data/data splits/binary) and the second argument with the output path where you want to store the trained models for testing with test_binary_LSTM
-train_binary_synth(r'data\data splits\binary', 'trained_models')
+train_binary_synth(r'data\data splits\binary', r'trained_models')
 
