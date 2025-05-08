@@ -273,80 +273,80 @@ def zero_pad(X, y):
 
     return X, y
 
+if __name__ == "__main__":
+    # Run the custom preprocessor function to load and clean mouse movement data
+    # Parameters:
+    # - Path to the dataset
+    # - 'None' for user_col, so it assigns synthetic user IDs
+    # - Column names for X, Y, event type, and timestamp
+    # - subfolder_users=True indicates that each user's data is stored in a separate subfolder
+    data = preprocessor('data\mouse',
+                        None, 'Mouse X', 'Mouse Y', 'Type', 'TimeStamp', True)
 
-# Run the custom preprocessor function to load and clean mouse movement data
-# Parameters:
-# - Path to the dataset
-# - 'None' for user_col, so it assigns synthetic user IDs
-# - Column names for X, Y, event type, and timestamp
-# - subfolder_users=True indicates that each user's data is stored in a separate subfolder
-data = preprocessor('data\mouse',
-                    None, 'Mouse X', 'Mouse Y', 'Type', 'TimeStamp', True)
+    # Optional: Save the full cleaned data as a CSV file for inspection
+    # data.to_csv('Gmail.csv', index=False)
 
-# Optional: Save the full cleaned data as a CSV file for inspection
-# data.to_csv('Gmail.csv', index=False)
+    # Optional: Save the full cleaned data as a NumPy array for future use
+    # np.save('Gmail.npy', data.to_numpy())
 
-# Optional: Save the full cleaned data as a NumPy array for future use
-# np.save('Gmail.npy', data.to_numpy())
-
-# Ensure the important numeric columns are properly converted from strings (if needed)
-cols_to_fix = ['X', 'Y', 'Timestamp']
-for col in cols_to_fix:
-    # Convert column to numeric, setting non-convertible values to NaN
-    data[col] = pd.to_numeric(data[col], errors='coerce')
-
-
-# Convert the 'Timestamp' column to numeric values
-# Any non-numeric or malformed values will be set to NaN (coerced)
-data['Timestamp'] = pd.to_numeric(data['Timestamp'], errors='coerce')
-
-# Process the cleaned DataFrame into sequences suitable for LSTM modeling
-# This function performs:
-# - User-wise and session-wise segmentation
-# - Trajectory extraction using 250ms pause detection
-# - Derivative computation (ΔX, ΔY, ΔT)
-# - Sequence filtering (length ≥ 5)
-# - 80/20 train-validation split per user
-# Returns:
-# - X_train, y_train: list of padded input sequences and their labels (train set)
-# - X_val, y_val: same for validation set
-# - lens: list of lengths of all sequences
-# - raw_X: original X/Y/T data for visualization or further analysis
-X_train, y_train, X_val, y_val, lens, raw_X = perception_windows(data)
+    # Ensure the important numeric columns are properly converted from strings (if needed)
+    cols_to_fix = ['X', 'Y', 'Timestamp']
+    for col in cols_to_fix:
+        # Convert column to numeric, setting non-convertible values to NaN
+        data[col] = pd.to_numeric(data[col], errors='coerce')
 
 
-print(len(X_train), len(X_val))
+    # Convert the 'Timestamp' column to numeric values
+    # Any non-numeric or malformed values will be set to NaN (coerced)
+    data['Timestamp'] = pd.to_numeric(data['Timestamp'], errors='coerce')
 
-# Apply interquartile range (IQR) based filtering to remove outlier sequences
-# from the combined training and validation sets based on their lengths
-# This function returns:
-# - bottom_n: the minimum sequence length threshold (for padding/truncation)
-# - top_n: the maximum sequence length threshold
-bottom_n, top_n = filter_outliers(lens, X_train + X_val)
+    # Process the cleaned DataFrame into sequences suitable for LSTM modeling
+    # This function performs:
+    # - User-wise and session-wise segmentation
+    # - Trajectory extraction using 250ms pause detection
+    # - Derivative computation (ΔX, ΔY, ΔT)
+    # - Sequence filtering (length ≥ 5)
+    # - 80/20 train-validation split per user
+    # Returns:
+    # - X_train, y_train: list of padded input sequences and their labels (train set)
+    # - X_val, y_val: same for validation set
+    # - lens: list of lengths of all sequences
+    # - raw_X: original X/Y/T data for visualization or further analysis
+    X_train, y_train, X_val, y_val, lens, raw_X = perception_windows(data)
 
-# Print the selected lower and upper bounds for sequence length
-print(bottom_n, top_n)
+
+    print(len(X_train), len(X_val))
+
+    # Apply interquartile range (IQR) based filtering to remove outlier sequences
+    # from the combined training and validation sets based on their lengths
+    # This function returns:
+    # - bottom_n: the minimum sequence length threshold (for padding/truncation)
+    # - top_n: the maximum sequence length threshold
+    bottom_n, top_n = filter_outliers(lens, X_train + X_val)
+
+    # Print the selected lower and upper bounds for sequence length
+    print(bottom_n, top_n)
 
 
-# Pad or truncate each training sequence to have the same length (top_n)
-# Only sequences longer than bottom_n are retained
-# Resulting shape: (num_sequences, top_n, 3), where 3 = ΔX, ΔY, ΔT
-X_train, y_train = zero_pad(X_train, y_train)
+    # Pad or truncate each training sequence to have the same length (top_n)
+    # Only sequences longer than bottom_n are retained
+    # Resulting shape: (num_sequences, top_n, 3), where 3 = ΔX, ΔY, ΔT
+    X_train, y_train = zero_pad(X_train, y_train)
 
-# Apply the same zero-padding/truncation process to the validation set
-X_val, y_val = zero_pad(X_val, y_val)
+    # Apply the same zero-padding/truncation process to the validation set
+    X_val, y_val = zero_pad(X_val, y_val)
 
-# Apply zero-padding to raw (X, Y, Timestamp) sequences for visualization or auxiliary evaluation
-# Since these don't have class labels, a dummy label array of ones is passed
-raw_X, _ = zero_pad(raw_X, np.ones(len(raw_X)))
+    # Apply zero-padding to raw (X, Y, Timestamp) sequences for visualization or auxiliary evaluation
+    # Since these don't have class labels, a dummy label array of ones is passed
+    raw_X, _ = zero_pad(raw_X, np.ones(len(raw_X)))
 
-# Save each user's padded sequences for binary classification
-save_path = r"data\data splits\binary"
-os.makedirs(save_path, exist_ok=True)
+    # Save each user's padded sequences for binary classification
+    save_path = r"data\data splits\binary"
+    os.makedirs(save_path, exist_ok=True)
 
-# Save padded sequences per user
-for user_id in np.unique(y_train):
-    user_sequences = X_train[y_train == user_id]
-    np.save(f"{save_path}{user_id}.npy", user_sequences)
+    # Save padded sequences per user
+    for user_id in np.unique(y_train):
+        user_sequences = X_train[y_train == user_id]
+        np.save(f"{save_path}{user_id}.npy", user_sequences)
 
 

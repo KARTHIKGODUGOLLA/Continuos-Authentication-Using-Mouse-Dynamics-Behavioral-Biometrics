@@ -268,53 +268,70 @@ def train_binary(data_path, out_path, max_loops=5, patience=2):
 
 
 def train_binary_over(data_path, out_path):
+    """
+    Trains a binary LSTM model for user authentication using oversampled training data.
+    For each user, the model is trained to distinguish between genuine and imposter mouse dynamics sequences.
+    Oversampling is used to balance the genuine and imposter classes.
+
+    Args:
+        data_path (str): Path to the folder containing .npy files (each representing a user's sequences).
+        out_path (str): Path to save the trained models (.keras format).
+
+    Returns:
+        None
+    """
+    # Create output directory if it doesn't exist
     os.makedirs(out_path, exist_ok=True)
+
+    # Load all user data files (.npy)
     all_files = np.sort([os.path.join(data_path, f) for f in os.listdir(data_path) if f.endswith('.npy')])
 
     for file in all_files:
+        # Extract user ID from file name
         user = os.path.splitext(os.path.basename(file))[0]
+
+        # Load genuine data for the current user
         gen_data = np.load(file)
+
+        # Load imposter data (from all other users)
         imp_files = [f for f in all_files if f != file]
         imp_data = np.vstack([np.load(f) for f in imp_files])
 
+        # Split genuine and imposter data into training and validation sets (80/20 split)
         split_idx_gen = int(len(gen_data) * 0.8)
         split_idx_imp = int(len(imp_data) * 0.8)
         gen_train_X, gen_val_X = gen_data[:split_idx_gen], gen_data[split_idx_gen:]
         imp_train_X, imp_val_X = imp_data[:split_idx_imp], imp_data[split_idx_imp:]
 
+        # Oversample genuine training data to match imposter data size
         gen_inds = np.random.choice(len(gen_train_X), len(imp_train_X), replace=True)
         gen_train_X = gen_train_X[gen_inds]
 
+        # Create corresponding labels
         gen_train_y = np.ones(len(gen_train_X))
         gen_val_y = np.ones(len(gen_val_X))
         imp_train_y = np.zeros(len(imp_train_X))
         imp_val_y = np.zeros(len(imp_val_X))
 
+        # Combine genuine and imposter data for training and validation
         X_train = np.vstack([gen_train_X, imp_train_X])
         y_train = np.concatenate([gen_train_y, imp_train_y])
         X_val = np.vstack([gen_val_X, imp_val_X])
         y_val = np.concatenate([gen_val_y, imp_val_y])
 
+        # Shuffle the training data
         X_train, y_train = shuffle(X_train, y_train, random_state=42)
+
+        # Define path to save the best model for the current user
         model_path = os.path.join(out_path, f'{user}_min_val_loss.keras')
 
+        # Set up early stopping based on validation AUC to prevent overfitting
         early_stop = EarlyStopping(
             monitor='val_auc',
             patience=10
         )
 
-#  Building the model architecture
-        # model = Sequential([
-        #     Input(shape=(X_train.shape[1], X_train.shape[2])),
-        #     Masking(mask_value=0.0),
-        #     Bidirectional(LSTM(128, return_sequences=True, recurrent_dropout=0.2)),
-        #     BatchNormalization(),
-        #     Dropout(0.3),
-        #     Bidirectional(LSTM(128, recurrent_dropout=0.2)),
-        #     Dense(1, activation='sigmoid')
-        # ])
-
-#  Building the model architecture
+        # Build a standard LSTM model for binary classification
         model = Sequential([
             Input(shape=(X_train.shape[1], X_train.shape[2])),
             Masking(mask_value=0.0),
@@ -325,10 +342,21 @@ def train_binary_over(data_path, out_path):
             Dense(1, activation='sigmoid')
         ])
 
+        # Compile the model with AUC and accuracy metrics
         model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', AUC(name='auc')])
+
+        # Save the model checkpoint only if validation AUC improves
         mc = ModelCheckpoint(model_path, monitor='val_auc', mode='max', save_best_only=True, verbose=1)
-#  Training the model
-        history = model.fit(X_train, y_train, epochs=100, batch_size=512, validation_data=(X_val, y_val), callbacks=[mc, early_stop])
+
+        # Train the model on oversampled data
+        history = model.fit(
+            X_train, y_train,
+            epochs=100,
+            batch_size=512,
+            validation_data=(X_val, y_val),
+            callbacks=[mc, early_stop]
+        )
+
 
 def train_binary_synth(data_path, out_path):
     # Create output directory if it doesn't exist
@@ -419,7 +447,7 @@ def train_binary_synth(data_path, out_path):
         # Train the model with validation and callbacks
         history = model.fit(X_train, y_train, epochs=100, batch_size=512, validation_data=(X_val, y_val), callbacks=[mc, early_stop])
 
-
-#replace the first argument path with the .npy sequences generated from the mouse_preprocessor file(stored in the folder data/data splits/binary) and the second argument with the output path where you want to store the trained models for testing with test_binary_LSTM
-train_binary_synth(r'data\data splits\binary', r'trained_models')
+if __name__ == "__main__":
+    #replace the first argument path with the .npy sequences generated from the mouse_preprocessor file(stored in the folder data/data splits/binary) and the second argument with the output path where you want to store the trained models for testing with test_binary_LSTM
+    train_binary_synth(r'data\data splits\binary', r'trained_models')
 

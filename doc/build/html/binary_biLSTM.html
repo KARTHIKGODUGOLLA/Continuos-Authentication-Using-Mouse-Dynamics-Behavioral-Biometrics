@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>binary_biLSTM module &#8212; Continuos-Authentication-Using-Mouse-Dynamics-Behavioral-Biometrics 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mouse_preprocessor module" href="mouse_preprocessor.html" />
+    <link rel="prev" title="src" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-binary_biLSTM">
+<span id="binary-bilstm-module"></span><h1>binary_biLSTM module<a class="headerlink" href="#module-binary_biLSTM" title="Link to this heading">¶</a></h1>
+<p>This module builds and trains a binary classification model using BiLSTM
+for continuous authentication based on mouse dynamics data.
+It includes data augmentation, preprocessing, model definition,
+and evaluation with AUC and EER metrics.</p>
+<p>Author: Karthik Godugolla
+Date: May 2025</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="binary_biLSTM.synthetic_interp">
+<span class="sig-prename descclassname"><span class="pre">binary_biLSTM.</span></span><span class="sig-name descname"><span class="pre">synthetic_interp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gen_X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqs_needed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ang_thrsh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#binary_biLSTM.synthetic_interp" title="Link to this definition">¶</a></dt>
+<dd><p>Generates synthetic mouse movement sequences by replicating and modifying
+existing sequences with optional noise and angle thresholding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gen_X</strong> (<em>np.ndarray</em>) – Original input sequences to replicate.</p></li>
+<li><p><strong>gen_y</strong> (<em>np.ndarray</em>) – Corresponding labels for the sequences.</p></li>
+<li><p><strong>seqs_needed</strong> (<em>int</em>) – Total number of sequences desired after augmentation.</p></li>
+<li><p><strong>noise_std</strong> (<em>float</em><em>, </em><em>optional</em>) – Standard deviation of Gaussian noise to apply. Default is 5.</p></li>
+<li><p><strong>ang_thrsh</strong> (<em>float</em><em>, </em><em>optional</em>) – Angle threshold in degrees to trigger modifications. Default is 25.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(new_X, new_y) where both are numpy arrays of augmented sequences and labels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="binary_biLSTM.train_binary">
+<span class="sig-prename descclassname"><span class="pre">binary_biLSTM.</span></span><span class="sig-name descname"><span class="pre">train_binary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_loops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#binary_biLSTM.train_binary" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="binary_biLSTM.train_binary_over">
+<span class="sig-prename descclassname"><span class="pre">binary_biLSTM.</span></span><span class="sig-name descname"><span class="pre">train_binary_over</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#binary_biLSTM.train_binary_over" title="Link to this definition">¶</a></dt>
+<dd><p>Trains a binary LSTM model for user authentication using oversampled training data.
+For each user, the model is trained to distinguish between genuine and imposter mouse dynamics sequences.
+Oversampling is used to balance the genuine and imposter classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<em>str</em>) – Path to the folder containing .npy files (each representing a user’s sequences).</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – Path to save the trained models (.keras format).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="binary_biLSTM.train_binary_synth">
+<span class="sig-prename descclassname"><span class="pre">binary_biLSTM.</span></span><span class="sig-name descname"><span class="pre">train_binary_synth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#binary_biLSTM.train_binary_synth" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Continuos-Authentication-Using-Mouse-Dynamics-Behavioral-Biometrics</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">binary_biLSTM module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mouse_preprocessor.html">mouse_preprocessor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_binary_LSTM.html">test_binary_LSTM module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mouse_preprocessor.html">mouse_preprocessor module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">binary_biLSTM module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#binary_biLSTM.synthetic_interp"><code class="docutils literal notranslate"><span class="pre">synthetic_interp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binary_biLSTM.train_binary"><code class="docutils literal notranslate"><span class="pre">train_binary()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binary_biLSTM.train_binary_over"><code class="docutils literal notranslate"><span class="pre">train_binary_over()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binary_biLSTM.train_binary_synth"><code class="docutils literal notranslate"><span class="pre">train_binary_synth()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_binary_LSTM.html">test_binary_LSTM module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">src</a></li>
+      <li>Next: <a href="mouse_preprocessor.html" title="next chapter">mouse_preprocessor module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, karthik_godugolla.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/binary_biLSTM.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

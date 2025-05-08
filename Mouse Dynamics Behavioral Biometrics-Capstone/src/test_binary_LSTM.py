@@ -242,22 +242,22 @@ def binary_test(splits, n, model_path='./'):
 
     return results
 
-
-# CROSS VALIDATION NEEDED
-# OBSERVE IF TREND FOR GMAIL STABLE (BETTER MULTI THAN BINARY)
-# for j in range(10):
-splits = train_test(r'data\data splits\binary')
-print(splits.keys())
-i = 1
-while i <= 1:
-    print(f'######################################################N=={i}######################################################')
-    results = binary_test(splits, i,r'trained_models\binary_biLSTM_synth')
-    results = pd.DataFrame(results)
-    # results.to_csv(f'Gmail Results/binary/test.csv', index=False)
-    if i == 1:
-        i += 4
-    else:
-        i += 5
+if __name__ == "__main__":
+    # CROSS VALIDATION NEEDED
+    # OBSERVE IF TREND FOR GMAIL STABLE (BETTER MULTI THAN BINARY)
+    # for j in range(10):
+    splits = train_test(r'data\data splits\binary')
+    print(splits.keys())
+    i = 1
+    while i <= 1:
+        print(f'######################################################N=={i}######################################################')
+        results = binary_test(splits, i,r'trained_models\binary_biLSTM_synth')
+        results = pd.DataFrame(results)
+        # results.to_csv(f'Gmail Results/binary/test.csv', index=False)
+        if i == 1:
+            i += 4
+        else:
+            i += 5
 
 
 
